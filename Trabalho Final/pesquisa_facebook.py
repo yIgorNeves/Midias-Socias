@@ -72,6 +72,14 @@ def make_request_by_age(account, interest_id, age_interval):
     audience = make_request(account,targeting_spec)
 #     print 'audience_size: %d' % audience
     return audience  
+
+def make_request_by_race (account, interest_id, race):
+    targeting_spec = get_default_targeting_spec()
+    targeting_spec['interests'] = [interest_id]
+    targeting_spec['racial_affinities'] = race
+    audience = make_request(account,targeting_spec)
+    return audience
+
           
    
 def get_politicians_distribution(account):
@@ -120,9 +128,10 @@ def get_politicians_distribution(account):
 #         create new dictionaries to store audience values
         gender_values = {}
         age_values = {}
+        race_values = {}
         
         print ('politician %s' % politician_interest)
-        
+        ########################## GENDER REQUEST ################################
         total_gender = 0
         for gender in genders:
             valor  = make_request_by_gender(account, politician_interest, genders[gender])
@@ -134,17 +143,32 @@ def get_politicians_distribution(account):
         # calculating percentages for gender
         for gender in gender_values:
             print ('\tpercentage of %s: %.2f' % (gender, (float(gender_values[gender])/total_gender)*100))
-            
         
+        ################################ AGE REQUEST #####################################
         total_age = 0
         for age_interval in age_intervals:
             valor  = make_request_by_age(account, politician_interest, age_intervals[age_interval])
             total_age+=valor
             age_values[age_interval]= valor
 
-        # calculating percentages for gender            
+        # calculating percentages for age            
         for age_interval in age_values:
             print ('\tpercentage of %s: %.2f' % (age_interval, (float(age_values[age_interval])/total_age)*100))                       
+                                         
+            
+        ############################### RACE REQUEST ###########################################
+        total_race = 0
+        for race in racial_affinities:
+            valor  = make_request_by_race(account, politician_interest, racial_affinities[race])
+            total_race+=valor
+            race_values[race]= valor
+
+        # calculating percentages for race            
+        for race in race_values:
+            print ('\tpercentage of %s: %.2f' % (race, (float(race_values[race])/total_race)*100))   
+
+        
+        
                      
     
     

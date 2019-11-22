@@ -1,7 +1,6 @@
 import json
 
 def main():
-    dict_marcas = {}
   ##################### LENDO O JSON ###################### 
     print("\n\n##################### LENDO O JSON SALVO ######################")                             
     dicionario_lido={}
