@@ -1,0 +1,22 @@
+Under 24
+25-34   
+35-44                         
+45-54                         
+55-64                         
+Over 65                         
+African American                      
+Asian                         
+Caucasian                         
+Hispanic                             
+Under $20k                         
+$20k-40k                        
+$40k-60k                         
+$60k-80k                         
+$80k-100k                          
+$100k-125k                        
+Over $125k                         
+No College                         
+College                         
+Adv. Degree                             
+Has Kids                         
+No Kids
