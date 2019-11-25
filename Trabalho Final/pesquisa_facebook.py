@@ -15,8 +15,7 @@ secret = "-"
 
 def get_default_targeting_spec():
     targeting_spec = {
-        "geo_locations": {"countries":["BR"], 'location_types': ['recent', 'home'],},
-    #     "geo_locations": {"countries":["US"], 'location_types': ['home']},
+        "geo_locations": {"countries":["US"], 'location_types': ['home'],},
         "publisher_platforms": ["facebook", "instagram"],
         "facebook_positions": ["feed", "instream_video"], #feed, right_hand_column
     #     "device_platforms": ["mobile", "desktop"],
@@ -31,6 +30,51 @@ def get_default_targeting_spec():
         "flexible_spec": []        
     } 
     return targeting_spec   
+genders = {          
+    'male': [1],
+    'female': [2]
+}
+
+age_intervals = {            
+    'under 24' :{'age_min': 13, 'age_max': 24},
+    '25-34':{'age_min':25,'age_max':34},
+    '35-44':{'age_min':35,'age_max':44},
+    '45-54':{'age_min':45,'age_max':54},
+    '55-64':{'age_min':55,'age_max':64},
+    'over 65':{'age_min':65,'age_max':-1},                         
+}
+
+racial_affinities = {                     
+    'african_american': {"id":"6018745176183","name":"African American (US)"},
+    'asian_american': {"id":"6021722613183","name":"Asian American (US)"},
+    'hispanic_all': {"id":"6003133212372","name":"Hispanic (US - All)"},
+    'other': 'dealt with specially' #excluded
+    # this goes into behaviors in exclusions     
+}
+
+caucasian_spec = {
+    "behaviors":[
+        {"id":"6018745176183","name":"African American (US)"},
+        {"id":"6021722613183","name":"Asian American (US)"},
+        {"id":"6003133212372","name":"Hispanic (US - All)"}
+    ]
+}
+
+income_levels={
+#         'all': [],
+#         'all': [],
+    '30k_to_40k':[{"id": "6018510070532","name": "$30,000 - $40,000"}],                 
+    '40k_to_50k':[{"id": "6018510087532","name": "$40,000 - $50,000"}],
+    '50k_to_75k':[{"id": "6018510122932","name": "$50,000 - $75,000"}],        
+    '75k_to_100k':[{"id": "6018510100332","name": "$75,000 - $100,000"}],
+    '100k_to_125k':[{"id": "6018510083132","name": "$100,000 - $125,000"}],
+    '125k_to_150k':[{"id": "6017897162332","name": "$125,000 - $150,000"}],
+    '150k_to_250k':[{"id": "6017897374132","name": "$150,000 - $250,000"}],
+    '250k_to_350k':[{"id": "6017897397132","name": "$250,000 - $350,000"}], 
+    '350k_to_500k':[{"id": "6017897416732","name": "$350,000 - $500,000"}],
+    'over_500k':[{"id": "6017897439932","name": "Over $500,000"}]                                                            
+}
+     
 
 def get_ad_account():
     
@@ -57,7 +101,6 @@ def make_request_by_gender(account, interest_id, gender):
     targeting_spec['interests'] = [interest_id]
     targeting_spec['genders'] = gender   
     audience = make_request(account,targeting_spec)
-#     print 'audience_size: %d' % audience
     return audience  
     
     
@@ -70,13 +113,17 @@ def make_request_by_age(account, interest_id, age_interval):
     if (age_interval['age_max'] != -1):
         targeting_spec['age_max']= age_interval['age_max']  
     audience = make_request(account,targeting_spec)
-#     print 'audience_size: %d' % audience
     return audience  
 
 def make_request_by_race (account, interest_id, race):
     targeting_spec = get_default_targeting_spec()
     targeting_spec['interests'] = [interest_id]
-    targeting_spec['racial_affinities'] = race
+    
+    if race == 'other':
+        exclusion_race = caucasian_spec['behaviors']
+        targeting_spec['exclusions'] = {'behaviors': exclusion_race}
+    else:
+        targeting_spec['flexible_spec'] = [{'behaviors': [racial_affinities[race]]}]
     audience = make_request(account,targeting_spec)
     return audience
 
@@ -102,7 +149,7 @@ def get_politicians_distribution(account):
         'african_american': {"id":"6018745176183","name":"African American (US)"},
         'asian_american': {"id":"6021722613183","name":"Asian American (US)"},
         'hispanic_all': {"id":"6003133212372","name":"Hispanic (US - All)"},
-        #'other': 'dealt with specially' #excluded
+        'other': 'dealt with specially' #excluded
         # this goes into behaviors in exclusions     
     }
     
@@ -113,14 +160,7 @@ def get_politicians_distribution(account):
             {"id":"6003133212372","name":"Hispanic (US - All)"}
         ]
     } 
-    
-        
-    
-    # 6003280320043 -  Fernando Haddad
-    # 6013219668741 - Jair Bolsonaro
-    
-    # 6003210792176 -  Donald Trump
-    # 6003361373387 - Hillary Clinton   
+      
     politicians_interest = ["6003257632086","6003485071480","6003124160217","6002878910972"]
     
     
@@ -159,8 +199,9 @@ def get_politicians_distribution(account):
         ############################### RACE REQUEST ###########################################
         total_race = 0
         for race in racial_affinities:
-            valor  = make_request_by_race(account, politician_interest, racial_affinities[race])
-            total_race+=valor
+            valor  = make_request_by_race(account, politician_interest, race)
+            print('%s:%d' % (race, valor))
+            total_race += valor
             race_values[race]= valor
 
         # calculating percentages for race            
@@ -168,10 +209,6 @@ def get_politicians_distribution(account):
             print ('\tpercentage of %s: %.2f' % (race, (float(race_values[race])/total_race)*100))   
 
         
-        
-                     
-    
-    
 def main(argv): 
     account = get_ad_account()
     get_politicians_distribution(account)    
