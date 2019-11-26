@@ -27,7 +27,7 @@ def get_default_targeting_spec():
         "wireless_carrier": [],
         'behaviors': [],
         'interests': [],
-        "flexible_spec": []        
+        "flexible_spec": []       
     } 
     return targeting_spec   
 genders = {          
@@ -60,20 +60,12 @@ caucasian_spec = {
     ]
 }
 
-income_levels={
-#         'all': [],
-#         'all': [],
-    '30k_to_40k':[{"id": "6018510070532","name": "$30,000 - $40,000"}],                 
-    '40k_to_50k':[{"id": "6018510087532","name": "$40,000 - $50,000"}],
-    '50k_to_75k':[{"id": "6018510122932","name": "$50,000 - $75,000"}],        
-    '75k_to_100k':[{"id": "6018510100332","name": "$75,000 - $100,000"}],
-    '100k_to_125k':[{"id": "6018510083132","name": "$100,000 - $125,000"}],
-    '125k_to_150k':[{"id": "6017897162332","name": "$125,000 - $150,000"}],
-    '150k_to_250k':[{"id": "6017897374132","name": "$150,000 - $250,000"}],
-    '250k_to_350k':[{"id": "6017897397132","name": "$250,000 - $350,000"}], 
-    '350k_to_500k':[{"id": "6017897416732","name": "$350,000 - $500,000"}],
-    'over_500k':[{"id": "6017897439932","name": "Over $500,000"}]                                                            
+education_status_grouped = {                                             
+    'college':[2,3,5,6],
+    "high_school":[1,4,13],
+    'grad_school':[7,8,9,10,11],                  
 }
+
      
 
 def get_ad_account():
@@ -127,6 +119,18 @@ def make_request_by_race (account, interest_id, race):
     audience = make_request(account,targeting_spec)
     return audience
 
+
+def make_request_by_education (account, interest_id, education_status):
+    grade_aux=0
+    targeting_spec = get_default_targeting_spec()
+    targeting_spec['interests'] = [interest_id]
+    for grade in education_status:
+        targeting_spec['education_statuses'] = [grade]        
+        grade_aux += make_request(account,targeting_spec)
+    audience = grade_aux
+    return audience
+
+
           
    
 def get_politicians_distribution(account):
@@ -169,7 +173,8 @@ def get_politicians_distribution(account):
         gender_values = {}
         age_values = {}
         race_values = {}
-        
+        grade_values = {}
+
         print ('politician %s' % politician_interest)
         ########################## GENDER REQUEST ################################
         total_gender = 0
@@ -207,6 +212,18 @@ def get_politicians_distribution(account):
         # calculating percentages for race            
         for race in race_values:
             print ('\tpercentage of %s: %.2f' % (race, (float(race_values[race])/total_race)*100))   
+
+      ############################### EDUCATION REQUEST ###########################################
+        total_education = 0
+        for grade in education_status_grouped:
+            valor  = make_request_by_education(account, politician_interest, education_status_grouped[grade])
+            print('%s:%d' % (grade, valor))
+            total_education += valor
+            grade_values[grade]= valor
+
+        # calculating percentages for education            
+        for grade in grade_values:
+            print ('\tpercentage of %s: %.2f' % (grade, (float(grade_values[grade])/total_education)*100))   
 
         
 def main(argv): 

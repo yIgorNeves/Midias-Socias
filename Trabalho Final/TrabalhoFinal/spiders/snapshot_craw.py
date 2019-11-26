@@ -14,7 +14,5 @@ class Snap_spider(scrapy.Spider):
         for snap in response.css('body'):
             yield{
                 'name' : snap.css('div.content div.title_block div.title_left div.title::text').get(),
-                'values': snap.css('div.block_content_top div.block_charts table.block_charts tr.block_charts_row td.block_charts_col_right::text').getall().trim(),
+                'values': snap.css('div.block_content_top div.block_charts table.block_charts tr.block_charts_row td.block_charts_col_right::text').getall(),
             }
-        
-            
