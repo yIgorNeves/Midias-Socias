@@ -133,7 +133,7 @@ def make_request_by_education (account, interest_id, education_status):
 
           
    
-def get_politicians_distribution(account):
+def get_politicians_distribution(account, id):
     #dictionaries with the possible values for the attributes gender and age intervals
     genders = {          
         'male': [1],
@@ -165,7 +165,7 @@ def get_politicians_distribution(account):
         ]
     } 
       
-    politicians_interest = ["6003257632086","6003485071480","6003124160217","6002878910972"]
+    politicians_interest = [id]
     
     
     for politician_interest in politicians_interest:
@@ -175,7 +175,7 @@ def get_politicians_distribution(account):
         race_values = {}
         grade_values = {}
 
-        print ('politician %s' % politician_interest)
+        print ('Interest %s' % politician_interest)
         ########################## GENDER REQUEST ################################
         total_gender = 0
         for gender in genders:
@@ -228,7 +228,7 @@ def get_politicians_distribution(account):
         
 def main(argv): 
     account = get_ad_account()
-    get_politicians_distribution(account)    
+    #get_politicians_distribution(account)    
 
 
 if __name__ == "__main__":   

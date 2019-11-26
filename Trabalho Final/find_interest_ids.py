@@ -173,11 +173,19 @@ def findInterestByName(api, interest):
     print ("category: %s" % (search_result[0]['disambiguation_category']  if 'disambiguation_category' in search_result[0] else '-'))
     print ("topic: %s" % search_result[0]['topic']  if 'topic' in search_result[0] else '-')
 
+def remote(interest):
+    facebook_api = getFacebookAPI(token, act_id, secret)   
+    findInterestByName(facebook_api, interest)
+    search_result = getInterestIDFromText(facebook_api, interest)
+
+    return search_result[0]["id"]
+
+
 def main():
         
     facebook_api = getFacebookAPI(token, act_id, secret)   
-    interest = input("digite o nome da empresa: ")
-    findInterestByName(facebook_api, interest)
+    #interest = input("digite o nome da empresa: ")
+    #findInterestByName(facebook_api, interest)
     #testInterestSearch(facebook_api)
     #testSuggestions(facebook_api)
 #     testeValidateInterests(facebook_api)
