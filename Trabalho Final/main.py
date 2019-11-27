@@ -10,6 +10,22 @@ token = "EAAbPAyrnxo0BAPzWuLX7rwvEQjsJqgapZB72uA3zPLY7JYwUFklwHHZAg5QDvntzLNejvp
 act_id = "516894385544698"
 secret = "-"
 
+dict_demografics = {
+    'under 24' : 37000000,
+    '25-34': 62000000,
+    '35-44': 42000000,
+    '45-54': 32000000,
+    '55-64': 25000000,
+    'over 65': 22000000,
+    'african_american': 82000000,
+    'asian_american':   4100000,
+    'caucasian': 120000000,
+    'hispanic_all': 20000000,
+    'college': 82901000,
+    "high_school": 43000000,
+    'grad_school':10580000, 
+}
+
 def get_ad_account():
     
     if secret != '-':
@@ -32,6 +48,7 @@ def main():
     account = get_ad_account()
     for id in ids_vector:
         search.get_politicians_distribution(account,id)
+
 
 
 

@@ -4,12 +4,27 @@ __author__ = "Filipe Ribeiro"
 from facebookads.adobjects.adaccount import AdAccount
 from facebookads.api import FacebookAdsApi
 import sys
+import json
 
 #replace token and act_id with your value
 token = "EAAbPAyrnxo0BAPzWuLX7rwvEQjsJqgapZB72uA3zPLY7JYwUFklwHHZAg5QDvntzLNejvpORZCVHnjS0aLyLZBGTl8qtiVh3oPB6Nz4TAonq2KxCv14Jsci5sja54rhDWOHTACefiqzIGneW8wPYYgreJ738FVtHr3aMKZB963QZDZD"
 act_id = "516894385544698"
 secret = "-"
-
+results_by_interest={
+    'under 24' :,
+    '25-34': ,
+    '35-44': ,
+    '45-54': 3,
+    '55-64': ,
+    'over 65': ,
+    'african_american': ,
+    'asian_american':   ,
+    'caucasian': 120000000,
+    'hispanic_all': 20000000,
+    'college': 82901000,
+    "high_school": 43000000,
+    'grad_school':10580000, 
+}
 
 # https://developers.facebook.com/docs/marketing-api/targeting-search/
 
@@ -27,7 +42,9 @@ def get_default_targeting_spec():
         "wireless_carrier": [],
         'behaviors': [],
         'interests': [],
-        "flexible_spec": []       
+        "flexible_spec": [],
+        'family_statuses':[]
+          
     } 
     return targeting_spec   
 genders = {          
@@ -66,7 +83,12 @@ education_status_grouped = {
     'grad_school':[7,8,9,10,11],                  
 }
 
-     
+def make_request_by_parents(account,interest_id) :
+    targeting_spec = get_default_targeting_spec()
+    #targeting_spec['interests'] = [interest_id]
+    targeting_spec['family_statuses'] =  {'id':"6002714398372", "name":"Parents (All)"} 
+    audience = make_request(account,targeting_spec)
+    return audience 
 
 def get_ad_account():
     
@@ -76,6 +98,7 @@ def get_ad_account():
         FacebookAdsApi.init(access_token=token, api_version='v4.0')
     account = AdAccount('act_' + act_id)
     return account
+
 
 
 def make_request(account, targeting_spec):
@@ -177,17 +200,17 @@ def get_politicians_distribution(account, id):
 
         print ('Interest %s' % politician_interest)
         ########################## GENDER REQUEST ################################
-        total_gender = 0
-        for gender in genders:
-            valor  = make_request_by_gender(account, politician_interest, genders[gender])
-            total_gender+=valor
-            gender_values[gender]= valor # create a key in the dictionary and store the value. 
+        #total_gender = 0
+        # for gender in genders:
+        #     valor  = make_request_by_gender(account, politician_interest, genders[gender])
+        #     total_gender+=valor
+        #     gender_values[gender]= valor # create a key in the dictionary and store the value. 
              
-        print ('\t%s'% gender_values) # check the created dict values.
+        # print ('\t%s'% gender_values) # check the created dict values.
             
-        # calculating percentages for gender
-        for gender in gender_values:
-            print ('\tpercentage of %s: %.2f' % (gender, (float(gender_values[gender])/total_gender)*100))
+        # # calculating percentages for gender
+        # for gender in gender_values:
+        #     print ('\tpercentage of %s: %.2f' % (gender, (float(gender_values[gender])/total_gender)*100))
         
         ################################ AGE REQUEST #####################################
         total_age = 0
@@ -195,6 +218,7 @@ def get_politicians_distribution(account, id):
             valor  = make_request_by_age(account, politician_interest, age_intervals[age_interval])
             total_age+=valor
             age_values[age_interval]= valor
+        print('\t%s'%age_values)
 
         # calculating percentages for age            
         for age_interval in age_values:
@@ -224,6 +248,17 @@ def get_politicians_distribution(account, id):
         # calculating percentages for education            
         for grade in grade_values:
             print ('\tpercentage of %s: %.2f' % (grade, (float(grade_values[grade])/total_education)*100))   
+
+# ############################### PARENTS REQUEST ###########################################
+#         total_parents= 0
+#         valor  = make_request_by_parents(account, politician_interest)
+#         print('Parents: %d' % ( valor))
+        
+#         grade_values[grade]= valor
+
+#         # calculating percentages for education            
+#         for grade in grade_values:
+#             print ('\tpercentage of %s: %.2f' % (grade, (float(grade_values[grade])/total_education)*100))   
 
         
 def main(argv): 
