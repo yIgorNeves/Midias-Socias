@@ -10,21 +10,7 @@ import json
 token = "EAAbPAyrnxo0BAPzWuLX7rwvEQjsJqgapZB72uA3zPLY7JYwUFklwHHZAg5QDvntzLNejvpORZCVHnjS0aLyLZBGTl8qtiVh3oPB6Nz4TAonq2KxCv14Jsci5sja54rhDWOHTACefiqzIGneW8wPYYgreJ738FVtHr3aMKZB963QZDZD"
 act_id = "516894385544698"
 secret = "-"
-results_by_interest={
-    'under 24' :,
-    '25-34': ,
-    '35-44': ,
-    '45-54': 3,
-    '55-64': ,
-    'over 65': ,
-    'african_american': ,
-    'asian_american':   ,
-    'caucasian': 120000000,
-    'hispanic_all': 20000000,
-    'college': 82901000,
-    "high_school": 43000000,
-    'grad_school':10580000, 
-}
+
 
 # https://developers.facebook.com/docs/marketing-api/targeting-search/
 
@@ -193,10 +179,11 @@ def get_politicians_distribution(account, id):
     
     for politician_interest in politicians_interest:
 #         create new dictionaries to store audience values
-        gender_values = {}
+        #gender_values = {}
         age_values = {}
         race_values = {}
         grade_values = {}
+        total_behaviors={}
 
         print ('Interest %s' % politician_interest)
         ########################## GENDER REQUEST ################################
@@ -219,6 +206,7 @@ def get_politicians_distribution(account, id):
             total_age+=valor
             age_values[age_interval]= valor
         print('\t%s'%age_values)
+        total_behaviors["total_age"]=total_age
 
         # calculating percentages for age            
         for age_interval in age_values:
@@ -232,7 +220,7 @@ def get_politicians_distribution(account, id):
             print('%s:%d' % (race, valor))
             total_race += valor
             race_values[race]= valor
-
+        total_behaviors["total_race"]=total_race
         # calculating percentages for race            
         for race in race_values:
             print ('\tpercentage of %s: %.2f' % (race, (float(race_values[race])/total_race)*100))   
@@ -244,11 +232,12 @@ def get_politicians_distribution(account, id):
             print('%s:%d' % (grade, valor))
             total_education += valor
             grade_values[grade]= valor
-
+        total_behaviors["total_education"]=total_education
         # calculating percentages for education            
         for grade in grade_values:
             print ('\tpercentage of %s: %.2f' % (grade, (float(grade_values[grade])/total_education)*100))   
 
+        print(total_behaviors)
 # ############################### PARENTS REQUEST ###########################################
 #         total_parents= 0
 #         valor  = make_request_by_parents(account, politician_interest)
