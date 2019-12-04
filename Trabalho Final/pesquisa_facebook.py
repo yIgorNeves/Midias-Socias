@@ -219,14 +219,14 @@ def get_facebook_info(account, id):
         parent_values['no_parents']= no_parents
         print('No Parents: %d'% (no_parents)) 
 
-        total_dict:{
-            'age_values': age_values
-            'race_values': race_values
-            'grade_values': grade_values
-            'parent_values': parent_values
-            'total_behaviors': total_behaviors
-            'total_public': total_interest
-        }
+        # total_dict:{
+        #     'age_values': age_values
+        #     'race_values': race_values
+        #     'grade_values': grade_values
+        #     'parent_values': parent_values
+        #     'total_behaviors': total_behaviors
+        #     'total_public': total_interest
+        # }
 
         print(total_dict)
         #for parent in parent_values:
