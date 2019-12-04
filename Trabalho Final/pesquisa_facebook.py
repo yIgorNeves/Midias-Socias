@@ -11,7 +11,23 @@ token = "EAAbPAyrnxo0BAPzWuLX7rwvEQjsJqgapZB72uA3zPLY7JYwUFklwHHZAg5QDvntzLNejvp
 act_id = "516894385544698"
 secret = "-"
 
-
+#dictionary for global values
+dict_demografics = {
+    'under 24' : 37000000,
+    '25-34': 62000000,
+    '35-44': 42000000,
+    '45-54': 32000000,
+    '55-64': 25000000,
+    'over 65': 22000000,
+    'african_american': 82000000,
+    'asian_american':   4100000,
+    'caucasian': 120000000,
+    'hispanic_all': 20000000,
+    'college': 82901000,
+    'high_school': 43000000,
+    'grad_school':10580000, 
+    'parents': 44000000, 
+}
 # https://developers.facebook.com/docs/marketing-api/targeting-search/
 
 def get_default_targeting_spec():
@@ -69,12 +85,6 @@ education_status_grouped = {
     'grad_school':[7,8,9,10,11],                  
 }
 
-def make_request_by_parents(account,interest_id) :
-    targeting_spec = get_default_targeting_spec()
-    #targeting_spec['interests'] = [interest_id]
-    targeting_spec['family_statuses'] =  {'id':"6002714398372", "name":"Parents (All)"} 
-    audience = make_request(account,targeting_spec)
-    return audience 
 
 def get_ad_account():
     
@@ -95,15 +105,6 @@ def make_request(account, targeting_spec):
     reach_estimate = account.get_reach_estimate(params=api_params)
     number = reach_estimate[0]['users']
     return number
-
-
-def make_request_by_gender(account, interest_id, gender):
-    targeting_spec = get_default_targeting_spec()
-    targeting_spec['interests'] = [interest_id]
-    targeting_spec['genders'] = gender   
-    audience = make_request(account,targeting_spec)
-    return audience  
-    
     
 def make_request_by_age(account, interest_id, age_interval):
     targeting_spec = get_default_targeting_spec()    
@@ -140,119 +141,101 @@ def make_request_by_education (account, interest_id, education_status):
     return audience
 
 
-          
+def make_request_by_parents(account,interest_id):
+    targeting_spec = get_default_targeting_spec()
+    targeting_spec['interests'] = [interest_id]
+    flexible_spec=[]
+    flexible_spec.append({'family_statuses':[{'id':"6002714398372", "name":"Parents (All)"}]})
+    targeting_spec['flexible_spec']=flexible_spec
+    audience = make_request(account,targeting_spec)
+    return audience          
    
-def get_politicians_distribution(account, id):
-    #dictionaries with the possible values for the attributes gender and age intervals
-    genders = {          
-        'male': [1],
-        'female': [2]
-    }
+def get_facebook_info(account, id):
     
-    age_intervals = {            
-        'under 24' :{'age_min': 13, 'age_max': 24},
-        '25-34':{'age_min':25,'age_max':34},
-        '35-44':{'age_min':35,'age_max':44},
-        '45-54':{'age_min':45,'age_max':54},
-        '55-64':{'age_min':55,'age_max':64},
-        'over 65':{'age_min':65,'age_max':-1},                         
-    }
-    
-    racial_affinities = {                     
-        'african_american': {"id":"6018745176183","name":"African American (US)"},
-        'asian_american': {"id":"6021722613183","name":"Asian American (US)"},
-        'hispanic_all': {"id":"6003133212372","name":"Hispanic (US - All)"},
-        'other': 'dealt with specially' #excluded
-        # this goes into behaviors in exclusions     
-    }
-    
-    caucasian_spec = {
-        "behaviors":[
-            {"id":"6018745176183","name":"African American (US)"},
-            {"id":"6021722613183","name":"Asian American (US)"},
-            {"id":"6003133212372","name":"Hispanic (US - All)"}
-        ]
-    } 
       
-    politicians_interest = [id]
+    interests = [id]
     
     
-    for politician_interest in politicians_interest:
-#         create new dictionaries to store audience values
-        #gender_values = {}
+    for interest in interests:
+# #         create new dictionaries to store audience values
+        
         age_values = {}
         race_values = {}
         grade_values = {}
+        parent_values ={}
         total_behaviors={}
 
-        print ('Interest %s' % politician_interest)
-        ########################## GENDER REQUEST ################################
-        #total_gender = 0
-        # for gender in genders:
-        #     valor  = make_request_by_gender(account, politician_interest, genders[gender])
-        #     total_gender+=valor
-        #     gender_values[gender]= valor # create a key in the dictionary and store the value. 
-             
-        # print ('\t%s'% gender_values) # check the created dict values.
-            
-        # # calculating percentages for gender
-        # for gender in gender_values:
-        #     print ('\tpercentage of %s: %.2f' % (gender, (float(gender_values[gender])/total_gender)*100))
+        print ('Interest %s' % interest)
         
         ################################ AGE REQUEST #####################################
         total_age = 0
         for age_interval in age_intervals:
-            valor  = make_request_by_age(account, politician_interest, age_intervals[age_interval])
+            valor  = make_request_by_age(account, interest, age_intervals[age_interval])
             total_age+=valor
             age_values[age_interval]= valor
         print('\t%s'%age_values)
         total_behaviors["total_age"]=total_age
 
-        # calculating percentages for age            
+      #   # calculating percentages for age            
         for age_interval in age_values:
             print ('\tpercentage of %s: %.2f' % (age_interval, (float(age_values[age_interval])/total_age)*100))                       
                                          
             
-        ############################### RACE REQUEST ###########################################
+      #   ############################### RACE REQUEST ###########################################
         total_race = 0
         for race in racial_affinities:
-            valor  = make_request_by_race(account, politician_interest, race)
+            valor  = make_request_by_race(account, interest, race)
             print('%s:%d' % (race, valor))
             total_race += valor
             race_values[race]= valor
         total_behaviors["total_race"]=total_race
-        # calculating percentages for race            
+      #   # calculating percentages for race            
         for race in race_values:
             print ('\tpercentage of %s: %.2f' % (race, (float(race_values[race])/total_race)*100))   
 
-      ############################### EDUCATION REQUEST ###########################################
+      # ############################### EDUCATION REQUEST ###########################################
         total_education = 0
         for grade in education_status_grouped:
-            valor  = make_request_by_education(account, politician_interest, education_status_grouped[grade])
+            valor  = make_request_by_education(account, interest, education_status_grouped[grade])
             print('%s:%d' % (grade, valor))
             total_education += valor
             grade_values[grade]= valor
         total_behaviors["total_education"]=total_education
-        # calculating percentages for education            
+      #   # calculating percentages for education            
         for grade in grade_values:
             print ('\tpercentage of %s: %.2f' % (grade, (float(grade_values[grade])/total_education)*100))   
 
         print(total_behaviors)
-# ############################### PARENTS REQUEST ###########################################
-#         total_parents= 0
-#         valor  = make_request_by_parents(account, politician_interest)
-#         print('Parents: %d' % ( valor))
+############################### PARENTS REQUEST ###########################################
+        total_parents  = make_request_by_parents(account, interest)
+        print('Parents: %d' % ( total_parents))
         
-#         grade_values[grade]= valor
+        targeting_spec = get_default_targeting_spec()
+        targeting_spec['interests'] = [interest]
+        total_interest=make_request(account,targeting_spec)
+        print('Total Public : %d' % total_interest)
+        parent_values['parent'] = total_parents
+        no_parents= total_interest - total_parents
+        parent_values['no_parents']= no_parents
+        print('No Parents: %d'% (no_parents)) 
 
-#         # calculating percentages for education            
-#         for grade in grade_values:
-#             print ('\tpercentage of %s: %.2f' % (grade, (float(grade_values[grade])/total_education)*100))   
+        total_dict:{
+            'age_values': age_values
+            'race_values': race_values
+            'grade_values': grade_values
+            'parent_values': parent_values
+            'total_behaviors': total_behaviors
+            'total_public': total_interest
+        }
+
+        print(total_dict)
+        #for parent in parent_values:
+           # print ('\tpercentage of %s: %.2f' % (parent, (float(parent_values[parent])/total_parents)*100))   
 
         
 def main(argv): 
     account = get_ad_account()
-    #get_politicians_distribution(account)    
+    #get_facebook_info(account)    
 
 
 if __name__ == "__main__":   

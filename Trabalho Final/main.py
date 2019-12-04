@@ -41,13 +41,11 @@ def main():
         dicionario_aux = json.load(f)
     ids_vector = []
     for marca in dicionario_aux:
-        print(marca['name'])
-        ID = find_ids.remote(marca['name'])
-        ids_vector.append(ID)
-        print(ids_vector)
+        print('Nome: %s' % marca['name'])
+        print('Interest ID: %s' % marca['interest_id'])
     account = get_ad_account()
-    for id in ids_vector:
-        search.get_politicians_distribution(account,id)
+    for id in dicionario_aux:
+        search.get_facebook_info(account,id['interest_id'])
 
 
 

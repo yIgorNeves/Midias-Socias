@@ -75,107 +75,17 @@ def getLocationElement(api, element, location_type="country"):
     responses = TargetingSearch.search(params=params)
     return responses
 
-####################################################################################
-######################## searching for locations and their types
-#################################################################################### 
-def testSearchForLocationCode(api):
-#     available location types: country, country_group, region, city,
-#     resp = getLocationElement(api, "São Paulo", location_type="city")  
-#     print '###### Searching for city - São Paulo #######' 
-#     print resp
-     
-#     resp = getLocationElement(api, "Minas Gerais", location_type="region")
-#     print '###### Searching for state/region - Minas Gerais #######'   
-#     print resp 
-# 
-    resp = getLocationElement(api, "Italy", location_type="country") 
-    print ('###### Searching for country - Canada #######')
-    print (resp)
 
-####################################################################################
-######################## validating interests for a given list
-### interests may be excluded and must be validated from time to time
-#################################################################################### 
-def  testeValidateInterests(api):
-    interests_list = ['6003602262503','6003136682117','6003262996193', '6003058819532']
-    resp = validateInterestIdByInterest(api, interests_list)
-    for valid_element in resp: 
-        print ('******* valid *******')
-        print (valid_element["id"])  
-           
-
-####################################################################################
-######################## searching for suggestions for a given text
-#################################################################################### 
-def testSuggestions(api):
-    list_of_interests_to_search = ["Bayer","2K Games", "Sony", "Microsoft"]
-    for interest in list_of_interests_to_search:
-        print ('**********  SUGGESTIONS SEARCHING FOR %s  **********'  % interest)       
-        search_result = getSuggestions(api, interest)
-#         print search_result
-        
-        for element in search_result: 
-            print ("*********** NEW INTEREST *************")
-            print ("interest_id: %s" % element["id"])
-            print ("name: %s" % element["name"])
-            print ("audience_size: %s" % element["audience_size"])         
-#     getSuggestions("Web counter")
-#     getSuggestionsBehaviors("school")    
-
-
-
-####################################################################################
-######################## validating interests
-####################################################################################  
-def testValidateInterest(facebook_api):
-#     list_of_interests_to_validate = ["6002936693259", "6002839660079"]
-    list_of_interests_to_validate = ["6003184467302", "6003093235817", "6003331774171", "6003300230060"]
-    params = {
-        'type': 'adinterestvalid',
-        'interest_fbid_list': list_of_interests_to_validate,
-        'locale':'en_US'
-    }
-    resp = TargetingSearch.search(params=params, api=facebook_api)
-    print (resp)        
-    
-    
-
-####################################################################################
-######################## searching for interests for a given text
-####################################################################################   
-def testInterestSearch(api): 
-#     list_of_interests_to_search = ["Ciro Gomes", "Feijoada", "Politics"]
-    list_of_interests_to_search = ["Bayer","2K Games", "Sony","Microsoft"]
-    for interest in list_of_interests_to_search:
-        print ('**********  SEARCHING FOR %s  **********'  % interest)       
-        search_result = getInterestIDFromText(api, interest)
-
-        print ("*********** NEW INTEREST *************")            
-        print ("interest_id: %s" % search_result[0]["id"])
-        print ("name: %s" % search_result[0]["name"])
-        print ("audience_size: %s" % search_result[0]["audience_size"])
-        print ("category: %s" % (search_result[0]['disambiguation_category']  if 'disambiguation_category' in search_result[0] else '-'))
-        print ("topic: %s" % search_result[0]['topic']  if 'topic' in search_result[0] else '-')
-
-
-#             not all responses have a topic and category defined.  
-#             print "topic: %s" % element["topic"] 
-#             print "disambiguation_category: %s" % element["disambiguation_category"]     
 
 def findInterestByName(api, interest): 
     print ('**********  SEARCHING FOR %s  **********'  % interest)       
     search_result = getInterestIDFromText(api, interest)
 
-    print ("*********** NEW INTEREST *************")            
     print ("interest_id: %s" % search_result[0]["id"])
-    print ("name: %s" % search_result[0]["name"])
-    print ("audience_size: %s" % search_result[0]["audience_size"])
-    print ("category: %s" % (search_result[0]['disambiguation_category']  if 'disambiguation_category' in search_result[0] else '-'))
-    print ("topic: %s" % search_result[0]['topic']  if 'topic' in search_result[0] else '-')
+  
 
 def remote(interest):
-    facebook_api = getFacebookAPI(token, act_id, secret)   
-    findInterestByName(facebook_api, interest)
+    facebook_api = getFacebookAPI(token, act_id, secret)  
     search_result = getInterestIDFromText(facebook_api, interest)
 
     return search_result[0]["id"]
@@ -184,14 +94,7 @@ def remote(interest):
 def main():
         
     facebook_api = getFacebookAPI(token, act_id, secret)   
-    #interest = input("digite o nome da empresa: ")
-    #findInterestByName(facebook_api, interest)
-    #testInterestSearch(facebook_api)
-    #testSuggestions(facebook_api)
-#     testeValidateInterests(facebook_api)
-#     testSearchForLocationCode(facebook_api)
-#    testValidateInterest(facebook_api)
-    
+
 
 if __name__ == "__main__":
     main()    
