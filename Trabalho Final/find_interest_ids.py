@@ -76,12 +76,6 @@ def getLocationElement(api, element, location_type="country"):
     return responses
 
 
-
-def findInterestByName(api, interest): 
-    print ('**********  SEARCHING FOR %s  **********'  % interest)       
-    search_result = getInterestIDFromText(api, interest)
-
-    print ("interest_id: %s" % search_result[0]["id"])
   
 
 def remote(interest):

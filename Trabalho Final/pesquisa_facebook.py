@@ -32,21 +32,6 @@ dict_demografics = {
 dict_demografics_percents = {}
 for value in dict_demografics:
      dict_demografics_percents[value]= dict_demografics[value]/dict_demografics['total']
-# dict_demografics_percents['under 24'] = dict_demografics['under24']/dict_demografics['total']
-# dict_demografics_percents['25-34']=  dict_demografics['25-34']/dict_demografics['total']
-# dict_demografics_percents['35-44']=  dict_demografics['35-44']/dict_demografics['total']
-# dict_demografics_percents['45-54']=  dict_demografics['45-54']/dict_demografics['total']
-# dict_demografics_percents['55-64']=  dict_demografics['55-64']/dict_demografics['total']
-# dict_demografics_percents['over 65']=  dict_demografics['over 65']/dict_demografics['total']
-# dict_demografics_percents['african_american']=  dict_demografics['african_american']/dict_demografics['total']
-# dict_demografics_percents['asian_american']=    dict_demografics['asian_american']/dict_demografics['total']
-# dict_demografics_percents['caucasian']=  dict_demografics['caucasian']/dict_demografics['total']
-# dict_demografics_percents['hispanic_all']=  dict_demografics['hispanic_all']/dict_demografics['total']
-# dict_demografics_percents['college']=  dict_demografics['college']/dict_demografics['total']
-# dict_demografics_percents['high_school']=  dict_demografics['high_school']/dict_demografics['total']
-# dict_demografics_percents['grad_school']= dict_demografics['grad_school']/dict_demografics['total']
-# dict_demografics_percents['parents']=  dict_demografics['parents']/dict_demografics['total']
-
 
 # https://developers.facebook.com/docs/marketing-api/targeting-search/
 
@@ -246,18 +231,8 @@ def get_facebook_info(account ):
         parents['parents']= (total_parents/total_interest)/dict_demografics_percents['parents']
         parents['no_parents']= (no_parents/total_interest)/(1 - dict_demografics_percents['parents'])
         print(parents)
-        # total_dict:{
-        #     'age_values': age_values
-        #     'race_values': race_values
-        #     'grade_values': grade_values
-        #     'parent_values': parent_values
-        #     'total_behaviors': total_behaviors
-        #     'total_public': total_interest
-        # }
 
-        # print(total_dict)
-        #for parent in parent_values:
-           # print ('\tpercentage of %s: %.2f' % (parent, (float(parent_values[parent])/total_parents)*100))   
+    print(dict_demografics_percents)
 
         
 def main(argv): 
