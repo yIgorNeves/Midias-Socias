@@ -42,7 +42,9 @@ def main():
     ids_vector = []
     for marca in dicionario_aux:
         print('Nome: %s' % marca['name'])
-        print('Interest ID: %s' % marca['interest_id'])
+        interst = find_ids.remote(marca['name'])
+        print(interst)
+        marca['interest_id'] = interst
     account = get_ad_account()
     for id in dicionario_aux:
         search.get_facebook_info(account,id['interest_id'])
