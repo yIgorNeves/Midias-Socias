@@ -13,6 +13,7 @@ secret = "-"
 
 #dictionary for global values
 dict_demografics = {
+    'total':230000000,
     'under 24' : 37000000,
     '25-34': 62000000,
     '35-44': 42000000,
@@ -21,13 +22,17 @@ dict_demografics = {
     'over 65': 22000000,
     'african_american': 82000000,
     'asian_american':   4100000,
-    'caucasian': 120000000,
+    'other': 120000000,
     'hispanic_all': 20000000,
     'college': 82901000,
     'high_school': 43000000,
     'grad_school':10580000, 
     'parents': 44000000, 
 }
+dict_demografics_percents = {}
+for value in dict_demografics:
+     dict_demografics_percents[value]= dict_demografics[value]/dict_demografics['total']
+
 # https://developers.facebook.com/docs/marketing-api/targeting-search/
 
 def get_default_targeting_spec():
@@ -150,20 +155,21 @@ def make_request_by_parents(account,interest_id):
     audience = make_request(account,targeting_spec)
     return audience          
    
-def get_facebook_info(account, id):
+def get_facebook_info(account ):
     
       
-    interests = [id]
+    interests = [6003336011256]
     
     
     for interest in interests:
-# #         create new dictionaries to store audience values
+# #        create new dictionaries to store audience values
         
         age_values = {}
         race_values = {}
         grade_values = {}
         parent_values ={}
         total_behaviors={}
+        parents={}
 
         print ('Interest %s' % interest)
         
@@ -173,25 +179,29 @@ def get_facebook_info(account, id):
             valor  = make_request_by_age(account, interest, age_intervals[age_interval])
             total_age+=valor
             age_values[age_interval]= valor
-        print('\t%s'%age_values)
+        # print('\t%s'%age_values)
         total_behaviors["total_age"]=total_age
-
+        
       #   # calculating percentages for age            
         for age_interval in age_values:
-            print ('\tpercentage of %s: %.2f' % (age_interval, (float(age_values[age_interval])/total_age)*100))                       
+            age_values[age_interval]= ((age_values[age_interval]/total_behaviors["total_age"])/dict_demografics_percents[age_interval])
+
+        print (age_values)                       
                                          
             
       #   ############################### RACE REQUEST ###########################################
         total_race = 0
         for race in racial_affinities:
             valor  = make_request_by_race(account, interest, race)
-            print('%s:%d' % (race, valor))
+            #print('%s:%d' % (race, valor))
             total_race += valor
             race_values[race]= valor
         total_behaviors["total_race"]=total_race
       #   # calculating percentages for race            
         for race in race_values:
-            print ('\tpercentage of %s: %.2f' % (race, (float(race_values[race])/total_race)*100))   
+            race_values[race]= ((race_values[race]/total_behaviors["total_race"])/dict_demografics_percents[race])
+
+        print (race_values)         
 
       # ############################### EDUCATION REQUEST ###########################################
         total_education = 0
@@ -203,9 +213,9 @@ def get_facebook_info(account, id):
         total_behaviors["total_education"]=total_education
       #   # calculating percentages for education            
         for grade in grade_values:
-            print ('\tpercentage of %s: %.2f' % (grade, (float(grade_values[grade])/total_education)*100))   
+            grade_values[grade]=((grade_values[grade]/total_behaviors["total_education"])/dict_demografics_percents[grade]) 
 
-        print(total_behaviors)
+        print(grade_values)
 ############################### PARENTS REQUEST ###########################################
         total_parents  = make_request_by_parents(account, interest)
         print('Parents: %d' % ( total_parents))
@@ -218,25 +228,18 @@ def get_facebook_info(account, id):
         no_parents= total_interest - total_parents
         parent_values['no_parents']= no_parents
         print('No Parents: %d'% (no_parents)) 
+        parents['parents']= (total_parents/total_interest)/dict_demografics_percents['parents']
+        parents['no_parents']= (no_parents/total_interest)/(1 - dict_demografics_percents['parents'])
+        print(parents)
 
-        # total_dict:{
-        #     'age_values': age_values
-        #     'race_values': race_values
-        #     'grade_values': grade_values
-        #     'parent_values': parent_values
-        #     'total_behaviors': total_behaviors
-        #     'total_public': total_interest
-        # }
-
-        print(total_dict)
-        #for parent in parent_values:
-           # print ('\tpercentage of %s: %.2f' % (parent, (float(parent_values[parent])/total_parents)*100))   
+    print(dict_demografics_percents)
 
         
 def main(argv): 
     account = get_ad_account()
-    #get_facebook_info(account)    
+    get_facebook_info(account)    
 
 
 if __name__ == "__main__":   
     main(sys.argv[1:])
+    
