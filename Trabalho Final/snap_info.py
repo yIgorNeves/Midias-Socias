@@ -13,11 +13,8 @@ def main():
         aux =[]
         for valor in marca_id['values']:
             aux.append(valor.strip())
-        del aux[10:17]
-        print(len(aux))
-        # aux_int=[]
-        # for valor in aux:
-        #     aux_int.append(int(valor))
+        if(len(aux)==22):
+            del aux[10:17]
 
         marca_id['values']=aux
         print("\nValues: %s" % marca_id['values'])
@@ -58,5 +55,6 @@ def main():
                 marca_id['name'],
                 marca_id['interest_id'],
                 marca_id['values']))      
+
 if __name__ == "__main__":   
     main()

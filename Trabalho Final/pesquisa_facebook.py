@@ -155,10 +155,10 @@ def make_request_by_parents(account,interest_id):
     audience = make_request(account,targeting_spec)
     return audience          
    
-def get_facebook_info(account ):
+def get_facebook_info(account, interest):
     
       
-    interests = [6003336011256]
+    interests = [interest]
     
     
     for interest in interests:
@@ -193,11 +193,12 @@ def get_facebook_info(account ):
         total_race = 0
         for race in racial_affinities:
             valor  = make_request_by_race(account, interest, race)
-            #print('%s:%d' % (race, valor))
+            print('%s:%d' % (race, valor))
             total_race += valor
             race_values[race]= valor
         total_behaviors["total_race"]=total_race
-      #   # calculating percentages for race            
+      #   # calculating percentages for race       
+        print(total_behaviors["total_race"])     
         for race in race_values:
             race_values[race]= ((race_values[race]/total_behaviors["total_race"])/dict_demografics_percents[race])
 
@@ -237,7 +238,7 @@ def get_facebook_info(account ):
         
 def main(argv): 
     account = get_ad_account()
-    get_facebook_info(account)    
+    #get_facebook_info(account)    
 
 
 if __name__ == "__main__":   
