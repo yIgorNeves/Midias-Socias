@@ -9,6 +9,8 @@ class Snap_spider(scrapy.Spider):
         'https://snapshot.numerator.com/brand/bayer',
         'https://snapshot.numerator.com/brand/2k_games',
         'https://snapshot.numerator.com/retailer/mcdonalds',
+        'https://snapshot.numerator.com/retailer/burger_king',
+        'https://snapshot.numerator.com/brand/sony',
     ]
 
     def parse(self, response):
