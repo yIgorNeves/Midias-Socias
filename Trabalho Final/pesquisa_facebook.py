@@ -139,9 +139,11 @@ def make_request_by_education (account, interest_id, education_status):
     grade_aux=0
     targeting_spec = get_default_targeting_spec()
     targeting_spec['interests'] = [interest_id]
+
     for grade in education_status:
         targeting_spec['education_statuses'] = [grade]        
         grade_aux += make_request(account,targeting_spec)
+
     audience = grade_aux
     return audience
 
@@ -234,6 +236,14 @@ def get_facebook_info(account, interest):
         print(parents)
 
     print(dict_demografics_percents)
+
+     ##################### SALVANDO O JSON ###################### 
+    with open('totalPopulation.csv', 'w') as f:
+        json.dump(dict_demografics,f)
+
+      ##################### SALVANDO O JSON ###################### 
+    with open('totalFacebook.csv', 'w') as f:
+        json.dump(dict_demografics_percents,f)
 
         
 def main(argv): 

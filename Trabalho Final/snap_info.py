@@ -13,6 +13,8 @@ def main():
         aux =[]
         for valor in marca_id['values']:
             aux.append(valor.strip())
+            while("" in aux) : 
+                aux.remove("")
         if(len(aux)==22):
             del aux[10:17]
 
